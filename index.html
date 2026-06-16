@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JWT Cipher — Advanced Cryptographic Security Studio</title>
+  <meta name="description" content="A minimalist, high-end cryptographic studio for encoding, decoding, signing JWTs with HMAC & RSA, AES-GCM encryption, key strength analysis, token validation, and universal encoding conversion.">
+  
+  <!-- Modern Clean Typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  
+  <link rel="stylesheet" href="index.css">
+</head>
+<body>
+  <!-- Micro background elements (minimalist design) -->
+  <div class="minimal-glow" aria-hidden="true"></div>
+
+  <div class="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="brand">
+        <span class="brand-badge">v3.0</span>
+        <h1 class="brand-title">JWT <span class="accent-text">Cipher</span></h1>
+        <p class="brand-tagline">Security studio — JWT signing, AES-GCM encryption, key analysis & encoding tools</p>
+      </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav-bar" role="tablist">
+      <button type="button" class="tab-item active" id="tab-btn-standard" role="tab" aria-selected="true" aria-controls="panel-standard">
+        Standard JWT
+      </button>
+      <button type="button" class="tab-item" id="tab-btn-encrypted" role="tab" aria-selected="false" aria-controls="panel-encrypted">
+        Encrypted Token
+      </button>
+      <button type="button" class="tab-item" id="tab-btn-utilities" role="tab" aria-selected="false" aria-controls="panel-utilities">
+        Utilities
+      </button>
+      <button type="button" class="tab-item" id="tab-btn-converter" role="tab" aria-selected="false" aria-controls="panel-converter">
+        Converter
+      </button>
+    </nav>
+
+    <!-- Main Workspace -->
+    <main class="workspace-main">
+
+      <!-- ================= PANEL: STANDARD JWT ================= -->
+      <section class="workspace-panel active" id="panel-standard" role="tabpanel" aria-labelledby="tab-btn-standard">
+        <div class="workspace-grid">
+          
+          <!-- Configuration Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Configuration</h2>
+              <select id="jwt-alg" class="select-field">
+                <option value="HS256" selected>HS256 (HMAC-SHA256)</option>
+                <option value="HS384">HS384 (HMAC-SHA384)</option>
+                <option value="HS512">HS512 (HMAC-SHA512)</option>
+                <option value="RS256">RS256 (RSA-SHA256)</option>
+              </select>
+            </div>
+
+            <!-- Header Editor -->
+            <div class="editor-group">
+              <div class="group-header">
+                <span class="group-label">JWT Header</span>
+                <span id="header-status" class="status-indicator success">✓ Valid</span>
+              </div>
+              <textarea id="jwt-header" class="editor-area" spellcheck="false"></textarea>
+            </div>
+
+            <!-- Payload Editor with Templates & Helpers -->
+            <div class="editor-group">
+              <div class="group-header">
+                <span class="group-label">JWT Payload</span>
+                <span id="payload-status" class="status-indicator success">✓ Valid</span>
+              </div>
+              
+              <!-- Quick Actions Toolbar -->
+              <div class="toolbar-row">
+                <div class="select-wrapper">
+                  <select id="claims-template" class="toolbar-select">
+                    <option value="" disabled selected>Load Template...</option>
+                    <option value="session">User Session Token</option>
+                    <option value="oauth">OAuth Access Token</option>
+                    <option value="micro">Machine-to-Machine</option>
+                    <option value="clear">Empty Claims</option>
+                  </select>
+                </div>
+                
+                <div class="toolbar-buttons">
+                  <button type="button" class="toolbar-btn" id="btn-time-now" title="Set iat to Now">Now</button>
+                  <button type="button" class="toolbar-btn" id="btn-time-1h" title="Set exp to +1 Hour">+1h</button>
+                  <button type="button" class="toolbar-btn" id="btn-time-1d" title="Set exp to +1 Day">+1d</button>
+                  <button type="button" class="toolbar-btn" id="btn-time-7d" title="Set exp to +7 Days">+7d</button>
+                </div>
+              </div>
+              
+              <textarea id="jwt-payload" class="editor-area" spellcheck="false"></textarea>
+            </div>
+
+            <!-- HMAC Secret Key (shown for HS* algorithms) -->
+            <div class="editor-group" id="hmac-key-group">
+              <div class="group-header">
+                <label for="jwt-key" class="group-label">Secret Key</label>
+                <div class="format-toggles">
+                  <label class="toggle-label">
+                    <input type="radio" name="key-format" value="text" checked id="key-format-text"> Text
+                  </label>
+                  <label class="toggle-label">
+                    <input type="radio" name="key-format" value="hex" id="key-format-hex"> Hex
+                  </label>
+                </div>
+              </div>
+              <div class="input-control">
+                <input type="password" id="jwt-key" class="input-field" placeholder="Enter signing key..." value="kawander_secret_key_12345" autocomplete="off" />
+                <button type="button" class="icon-toggle-btn" id="btn-toggle-key-visibility" title="Toggle Secret Visibility">
+                  <svg class="eye-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+
+              <!-- HMAC Strength Advisor -->
+              <div class="strength-advisor" id="strength-advisor">
+                <div class="strength-header">
+                  <span class="strength-label">Key Strength</span>
+                  <span class="strength-value" id="strength-value">—</span>
+                </div>
+                <div class="strength-track">
+                  <div class="strength-fill" id="strength-fill"></div>
+                </div>
+                <div class="strength-hints" id="strength-hints"></div>
+              </div>
+            </div>
+
+            <!-- RSA PEM Keys (shown for RS256 algorithm) -->
+            <div class="editor-group rsa-key-group hidden" id="rsa-key-group">
+              <div class="group-header">
+                <label class="group-label">RSA Private Key (PEM)</label>
+                <button type="button" class="toolbar-btn" id="btn-generate-rsa" title="Generate new RSA-2048 key pair">
+                  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <polyline points="23 4 23 10 17 10"/><path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"/>
+                  </svg>
+                  Generate Keypair
+                </button>
+              </div>
+              <textarea id="rsa-private-key" class="editor-area pem-area" placeholder="-----BEGIN PRIVATE KEY-----&#10;Paste or generate RSA private key...&#10;-----END PRIVATE KEY-----" spellcheck="false"></textarea>
+
+              <div class="group-header" style="margin-top:10px">
+                <label class="group-label">RSA Public Key (PEM)</label>
+              </div>
+              <textarea id="rsa-public-key" class="editor-area pem-area" placeholder="-----BEGIN PUBLIC KEY-----&#10;Paste or generate RSA public key...&#10;-----END PUBLIC KEY-----" spellcheck="false"></textarea>
+            </div>
+          </div>
+
+          <!-- Token Output & Decoded Views -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Token Output</h2>
+              <span id="token-status" class="status-badge success">✓ Signature Verified</span>
+            </div>
+
+            <!-- Token Textarea & Highlight View -->
+            <div class="token-container">
+              <textarea id="jwt-encoded" class="token-area" placeholder="Paste or view standard JWT token..." spellcheck="false"></textarea>
+              <div class="token-colors-view" id="token-color-visualizer">
+                <span class="clr-header" id="vis-header"></span>.<span class="clr-payload" id="vis-payload"></span>.<span class="clr-signature" id="vis-signature"></span>
+              </div>
+            </div>
+
+            <!-- TTL Countdown Badge -->
+            <div id="ttl-status-bar" class="ttl-bar hidden">
+              <span class="ttl-icon">⏳</span>
+              <span id="ttl-text" class="ttl-text">Token active</span>
+            </div>
+
+            <!-- Main Actions -->
+            <div class="action-grid">
+              <button type="button" class="action-btn" id="btn-copy-token">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy Token
+              </button>
+              <button type="button" class="action-btn danger-action" id="btn-tamper-token" title="Mutate signature to simulate packet tampering">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
+                </svg>
+                Tamper Signature
+              </button>
+              <button type="button" class="action-btn accent-action" id="btn-send-to-encryptor">
+                Encrypt Token
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+            </div>
+
+            <!-- Validation Checklist -->
+            <div class="validation-checklist" id="validation-checklist">
+              <div class="checklist-header">
+                <span class="checklist-title">Token Validation Checklist</span>
+                <span class="checklist-score" id="checklist-score">0 / 0</span>
+              </div>
+              <div class="checklist-items" id="checklist-items">
+                <!-- Items injected by JS -->
+              </div>
+            </div>
+
+            <!-- Simplified Decoded Preview -->
+            <div class="decoded-inspector">
+              <div class="inspector-section">
+                <div class="section-banner header-banner">Header</div>
+                <pre id="decoded-header-view" class="json-preview">{}</pre>
+              </div>
+              <div class="inspector-section">
+                <div class="section-banner payload-banner">Payload</div>
+                <pre id="decoded-payload-view" class="json-preview">{}</pre>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PANEL: ENCRYPTED TOKEN ================= -->
+      <section class="workspace-panel" id="panel-encrypted" role="tabpanel" aria-labelledby="tab-btn-encrypted" style="display: none;">
+        <div class="workspace-grid">
+          
+          <!-- Encryptor Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">AES-256-GCM Encryptor</h2>
+            </div>
+            
+            <div class="editor-group">
+              <label for="enc-plaintext" class="group-label">Plaintext Payload</label>
+              <textarea id="enc-plaintext" class="editor-area" placeholder="Enter token or sensitive message to encrypt..." spellcheck="false"></textarea>
+            </div>
+
+            <div class="editor-group">
+              <div class="group-header">
+                <label for="enc-key" class="group-label">Encryption Key</label>
+                <div class="format-toggles">
+                  <label class="toggle-label">
+                    <input type="radio" name="enc-key-format" value="text" checked id="enc-key-format-text"> Text
+                  </label>
+                  <label class="toggle-label">
+                    <input type="radio" name="enc-key-format" value="hex" id="enc-key-format-hex"> Hex
+                  </label>
+                </div>
+              </div>
+              <div class="input-control">
+                <input type="password" id="enc-key" class="input-field" placeholder="Enter key..." value="kawander_secret_key_12345" autocomplete="off" />
+                <button type="button" class="icon-toggle-btn" id="btn-toggle-enc-key-visibility" title="Toggle Key Visibility">
+                  <svg class="eye-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="options-wrapper">
+                <label class="checkbox-control">
+                  <input type="checkbox" id="enc-key-derive" checked> Derive 32-byte key via SHA-256 (recommended for text keys)
+                </label>
+              </div>
+            </div>
+
+            <!-- Custom IV Advanced Options -->
+            <div class="editor-group advanced-group">
+              <div class="group-header">
+                <label for="enc-custom-iv" class="group-label">Custom IV <span class="muted">(Optional, 12-byte Hex)</span></label>
+              </div>
+              <input type="text" id="enc-custom-iv" class="input-field mono" placeholder="Generates randomly if empty (24 hex characters)..." maxlength="24" />
+            </div>
+
+            <button type="button" class="submit-btn" id="btn-encrypt">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Encrypt Payload
+            </button>
+
+            <!-- Encryption Result -->
+            <div class="editor-group output-group">
+              <label for="enc-ciphertext" class="group-label">Encrypted Result (IV:Ciphertext:Tag)</label>
+              <textarea id="enc-ciphertext" class="token-area font-mono" readonly placeholder="Hex outputs will generate here..." spellcheck="false"></textarea>
+              <button type="button" class="action-btn" id="btn-copy-enc-token" style="margin-top: 10px;">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                </svg>
+                Copy Encrypted Token
+              </button>
+            </div>
+          </div>
+
+          <!-- Decryptor Card -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">AES-256-GCM Decryptor</h2>
+            </div>
+            
+            <div class="editor-group">
+              <label for="dec-token" class="group-label">Encrypted Token (IV:Ciphertext:Tag)</label>
+              <textarea id="dec-token" class="editor-area font-mono" placeholder="Paste token e.g., 31a02be8a03a36bb800439b4:39b7ef6c..." spellcheck="false"></textarea>
+            </div>
+
+            <div class="editor-group">
+              <div class="group-header">
+                <label for="dec-key" class="group-label">Decryption Key</label>
+                <div class="format-toggles">
+                  <label class="toggle-label">
+                    <input type="radio" name="dec-key-format" value="text" checked id="dec-key-format-text"> Text
+                  </label>
+                  <label class="toggle-label">
+                    <input type="radio" name="dec-key-format" value="hex" id="dec-key-format-hex"> Hex
+                  </label>
+                </div>
+              </div>
+              <div class="input-control">
+                <input type="password" id="dec-key" class="input-field" placeholder="Enter decryption key..." value="kawander_secret_key_12345" autocomplete="off" />
+                <button type="button" class="icon-toggle-btn" id="btn-toggle-dec-key-visibility" title="Toggle Key Visibility">
+                  <svg class="eye-svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/>
+                  </svg>
+                </button>
+              </div>
+              
+              <div class="options-wrapper">
+                <label class="checkbox-control">
+                  <input type="checkbox" id="dec-key-derive" checked> Derive 32-byte key via SHA-256
+                </label>
+              </div>
+            </div>
+
+            <button type="button" class="submit-btn" id="btn-decrypt">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+              </svg>
+              Decrypt Token
+            </button>
+
+            <!-- Decryption Results -->
+            <div id="dec-result-section" class="decrypt-results hidden">
+              <div class="editor-group output-group">
+                <div class="group-header">
+                  <span class="group-label">Decrypted Plaintext</span>
+                  <span id="dec-status-badge" class="status-badge success">✓ Success</span>
+                </div>
+                <textarea id="dec-plaintext" class="token-area" readonly placeholder="Decrypted output..." spellcheck="false"></textarea>
+                
+                <div class="action-grid" id="dec-success-actions" style="margin-top: 10px;">
+                  <button type="button" class="action-btn" id="btn-copy-dec-plaintext">Copy Plaintext</button>
+                  <button type="button" class="action-btn accent-action" id="btn-send-to-decoder">Send to JWT Decoder</button>
+                </div>
+              </div>
+
+              <!-- Structural Map Analysis -->
+              <div class="structural-inspector">
+                <div class="inspector-heading font-medium">Segment Map Analysis</div>
+                <div class="inspect-item">
+                  <div class="item-label text-blue">IV (Initialization Vector)</div>
+                  <div class="item-hex mono" id="analysis-iv-hex">—</div>
+                  <div class="item-desc">12 bytes (24 hex characters)</div>
+                </div>
+                <div class="inspect-item">
+                  <div class="item-label text-purple">Ciphertext</div>
+                  <div class="item-hex mono" id="analysis-cipher-hex">—</div>
+                  <div class="item-desc" id="analysis-cipher-meta">0 bytes</div>
+                </div>
+                <div class="inspect-item">
+                  <div class="item-label text-pink">Authentication Tag</div>
+                  <div class="item-hex mono" id="analysis-tag-hex">—</div>
+                  <div class="item-desc">16 bytes (32 hex characters)</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PANEL: UTILITIES ================= -->
+      <section class="workspace-panel" id="panel-utilities" role="tabpanel" aria-labelledby="tab-btn-utilities" style="display: none;">
+        <div class="workspace-grid single-column">
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Cryptographic Secret Toolkit</h2>
+            </div>
+            <p class="card-desc">Generate secure keys with high entropy, or derive a 32-byte key from standard text strings.</p>
+
+            <div class="toolkit-section">
+              <h3 class="toolkit-subtitle">Secure Random Key Generator</h3>
+              
+              <div class="form-row">
+                <div class="input-col">
+                  <label for="gen-key-size" class="group-label">Key Size</label>
+                  <select id="gen-key-size" class="select-field">
+                    <option value="16">128-bit / 16 bytes (AES-128)</option>
+                    <option value="32" selected>256-bit / 32 bytes (AES-256 / HS256)</option>
+                    <option value="64">512-bit / 64 bytes (HS512)</option>
+                  </select>
+                </div>
+                <div class="input-col">
+                  <label for="gen-key-format" class="group-label">Encoding</label>
+                  <select id="gen-key-format" class="select-field">
+                    <option value="hex" selected>Hexadecimal</option>
+                    <option value="base64">Base64</option>
+                    <option value="base64url">Base64URL</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="button" class="submit-btn" id="btn-generate-random-key" style="margin-top: 10px;">
+                Generate High-Entropy Secret
+              </button>
+
+              <div class="editor-group" style="margin-top: 15px;">
+                <label for="generated-output-key" class="group-label">Generated Output</label>
+                <div class="input-control font-mono">
+                  <input type="text" id="generated-output-key" class="input-field mono" readonly placeholder="Output will load here..." />
+                  <button type="button" class="inline-copy-btn" id="btn-copy-gen-key">Copy</button>
+                </div>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div class="toolkit-section">
+              <h3 class="toolkit-subtitle">RSA Keypair Generator</h3>
+              <p class="card-desc" style="margin-bottom: 12px;">Generate a fresh RSA-2048 key pair in PEM format for RS256 signing and verification.</p>
+              
+              <button type="button" class="submit-btn" id="btn-generate-rsa-utility">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+                </svg>
+                Generate RSA-2048 Keypair
+              </button>
+              
+              <div class="editor-group" style="margin-top: 15px;">
+                <label class="group-label">Private Key (PKCS8 PEM)</label>
+                <textarea id="rsa-gen-private" class="editor-area pem-area" readonly placeholder="Private key will appear here..." spellcheck="false"></textarea>
+                <button type="button" class="action-btn" id="btn-copy-rsa-private" style="margin-top: 6px;">Copy Private Key</button>
+              </div>
+              
+              <div class="editor-group" style="margin-top: 10px;">
+                <label class="group-label">Public Key (SPKI PEM)</label>
+                <textarea id="rsa-gen-public" class="editor-area pem-area" readonly placeholder="Public key will appear here..." spellcheck="false"></textarea>
+                <button type="button" class="action-btn" id="btn-copy-rsa-public" style="margin-top: 6px;">Copy Public Key</button>
+              </div>
+              
+              <button type="button" class="action-btn accent-action" id="btn-use-rsa-keys" style="margin-top: 10px;">
+                Use in JWT Signer
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="9 18 15 12 9 6"/>
+                </svg>
+              </button>
+            </div>
+
+            <hr class="divider">
+
+            <div class="toolkit-section">
+              <h3 class="toolkit-subtitle">Key Deriver (SHA-256)</h3>
+              <p class="card-desc" style="margin-bottom: 12px;">Convert a readable password into a standard 32-byte binary key represented in both hex and Base64 format.</p>
+              
+              <div class="editor-group">
+                <label for="derive-input-text" class="group-label">Passphrase / Raw Secret</label>
+                <input type="text" id="derive-input-text" class="input-field" placeholder="Type text password here..." value="kawander_secret_key_12345" />
+              </div>
+
+              <div class="form-row" style="margin-top: 15px;">
+                <div class="input-col">
+                  <label class="group-label">Derived Key (Hex)</label>
+                  <div class="input-control">
+                    <input type="text" id="derived-hex-output" class="input-field mono" readonly />
+                    <button type="button" class="inline-copy-btn" id="btn-copy-derived-hex">Copy</button>
+                  </div>
+                </div>
+                <div class="input-col">
+                  <label class="group-label">Derived Key (Base64)</label>
+                  <div class="input-control">
+                    <input type="text" id="derived-base64-output" class="input-field mono" readonly />
+                    <button type="button" class="inline-copy-btn" id="btn-copy-derived-base64">Copy</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PANEL: UNIVERSAL CONVERTER ================= -->
+      <section class="workspace-panel" id="panel-converter" role="tabpanel" aria-labelledby="tab-btn-converter" style="display: none;">
+        <div class="workspace-grid single-column">
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Universal Encoding Converter</h2>
+            </div>
+            <p class="card-desc">Convert data between Text (UTF-8), Hex, Base64, and Base64URL. Paste any format and auto-detect or manually select.</p>
+
+            <div class="editor-group">
+              <div class="group-header">
+                <label for="conv-input" class="group-label">Input Data</label>
+                <select id="conv-input-format" class="select-field">
+                  <option value="text" selected>Text (UTF-8)</option>
+                  <option value="hex">Hexadecimal</option>
+                  <option value="base64">Base64</option>
+                  <option value="base64url">Base64URL</option>
+                </select>
+              </div>
+              <textarea id="conv-input" class="editor-area" placeholder="Paste or type input data here..." spellcheck="false"></textarea>
+            </div>
+
+            <button type="button" class="submit-btn" id="btn-convert">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/>
+                <polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/>
+              </svg>
+              Convert
+            </button>
+
+            <div class="converter-outputs" id="converter-outputs">
+              <div class="converter-output-item">
+                <div class="group-header">
+                  <label class="group-label">Text (UTF-8)</label>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-conv-text">Copy</button>
+                </div>
+                <textarea id="conv-out-text" class="token-area conv-output" readonly spellcheck="false" placeholder="—"></textarea>
+              </div>
+              <div class="converter-output-item">
+                <div class="group-header">
+                  <label class="group-label">Hexadecimal</label>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-conv-hex">Copy</button>
+                </div>
+                <textarea id="conv-out-hex" class="token-area conv-output mono" readonly spellcheck="false" placeholder="—"></textarea>
+              </div>
+              <div class="converter-output-item">
+                <div class="group-header">
+                  <label class="group-label">Base64</label>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-conv-base64">Copy</button>
+                </div>
+                <textarea id="conv-out-base64" class="token-area conv-output mono" readonly spellcheck="false" placeholder="—"></textarea>
+              </div>
+              <div class="converter-output-item">
+                <div class="group-header">
+                  <label class="group-label">Base64URL</label>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-conv-base64url">Copy</button>
+                </div>
+                <textarea id="conv-out-base64url" class="token-area conv-output mono" readonly spellcheck="false" placeholder="—"></textarea>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Footer -->
+    <footer class="app-footer">
+      <p>🔒 Cryptography runs entirely in browser. Local secure sandbox. Version 3.0</p>
+    </footer>
+  </div>
+
+  <!-- Toast system -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Script -->
+  <script src="app.js"></script>
+</body>
+</html>
