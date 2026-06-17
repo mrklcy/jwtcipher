@@ -4,42 +4,76 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>JWT Cipher — Advanced Cryptographic Security Studio</title>
-  <meta name="description" content="A minimalist, high-end cryptographic studio for encoding, decoding, signing JWTs with HMAC & RSA, AES-GCM encryption, key strength analysis, token validation, and universal encoding conversion.">
+  <meta name="description" content="A premium cryptographic studio for encoding, decoding, signing JWTs with HMAC & RSA, AES-GCM encryption, hash generation, password generation, QR codes, key strength analysis, and universal encoding conversion.">
   
-  <!-- Modern Clean Typography -->
+  <!-- Modern Typography -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
   
   <link rel="stylesheet" href="index.css">
 </head>
 <body>
-  <!-- Micro background elements (minimalist design) -->
-  <div class="minimal-glow" aria-hidden="true"></div>
+  <!-- Animated Background -->
+  <div class="bg-mesh" aria-hidden="true"></div>
+  <div class="particles" aria-hidden="true">
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+    <div class="particle"></div>
+  </div>
 
   <div class="app-container">
     <!-- Header -->
     <header class="app-header">
       <div class="brand">
-        <span class="brand-badge">v3.0</span>
+        <span class="brand-badge">v4.0</span>
         <h1 class="brand-title">JWT <span class="accent-text">Cipher</span></h1>
-        <p class="brand-tagline">Security studio — JWT signing, AES-GCM encryption, key analysis & encoding tools</p>
+        <p class="brand-tagline">Security studio — JWT signing, AES-GCM encryption, hashing, key tools & more</p>
+      </div>
+      <div class="header-controls">
+        <span class="shortcut-badge"><kbd>Ctrl</kbd>+<kbd>Enter</kbd> Encode &nbsp;|&nbsp; <kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>C</kbd> Copy</span>
+        <button type="button" class="theme-toggle-btn" id="btn-theme-toggle" title="Toggle Theme">
+          <svg class="theme-icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+          <svg class="theme-icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        </button>
       </div>
     </header>
 
-    <!-- Navigation -->
-    <nav class="nav-bar" role="tablist">
+    <!-- Navigation (Pill Tabs) -->
+    <nav class="nav-bar" role="tablist" id="nav-bar">
+      <div class="tab-indicator" id="tab-indicator"></div>
       <button type="button" class="tab-item active" id="tab-btn-standard" role="tab" aria-selected="true" aria-controls="panel-standard">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         Standard JWT
       </button>
       <button type="button" class="tab-item" id="tab-btn-encrypted" role="tab" aria-selected="false" aria-controls="panel-encrypted">
-        Encrypted Token
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        Encrypted
       </button>
       <button type="button" class="tab-item" id="tab-btn-utilities" role="tab" aria-selected="false" aria-controls="panel-utilities">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
         Utilities
       </button>
       <button type="button" class="tab-item" id="tab-btn-converter" role="tab" aria-selected="false" aria-controls="panel-converter">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="17 1 21 5 17 9"/><path d="M3 11V9a4 4 0 0 1 4-4h14"/><polyline points="7 23 3 19 7 15"/><path d="M21 13v2a4 4 0 0 1-4 4H3"/></svg>
         Converter
+      </button>
+      <button type="button" class="tab-item" id="tab-btn-hash" role="tab" aria-selected="false" aria-controls="panel-hash">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/></svg>
+        Hash
+      </button>
+      <button type="button" class="tab-item" id="tab-btn-password" role="tab" aria-selected="false" aria-controls="panel-password">
+        <svg class="tab-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        Passwords
       </button>
     </nav>
 
@@ -71,11 +105,15 @@
               <textarea id="jwt-header" class="editor-area" spellcheck="false"></textarea>
             </div>
 
-            <!-- Payload Editor with Templates & Helpers -->
+            <!-- Payload Editor -->
             <div class="editor-group">
               <div class="group-header">
                 <span class="group-label">JWT Payload</span>
-                <span id="payload-status" class="status-indicator success">✓ Valid</span>
+                <div style="display:flex;align-items:center;gap:6px;">
+                  <button type="button" class="json-format-btn" id="btn-prettify" title="Prettify JSON">{ }</button>
+                  <button type="button" class="json-format-btn" id="btn-minify" title="Minify JSON">{…}</button>
+                  <span id="payload-status" class="status-indicator success">✓ Valid</span>
+                </div>
               </div>
               
               <!-- Quick Actions Toolbar -->
@@ -97,11 +135,20 @@
                   <button type="button" class="toolbar-btn" id="btn-time-7d" title="Set exp to +7 Days">+7d</button>
                 </div>
               </div>
+
+              <!-- Quick Claim Inserters -->
+              <div class="quick-claims">
+                <button type="button" class="claim-btn" data-claim="jti" title="Insert JWT ID">+jti</button>
+                <button type="button" class="claim-btn" data-claim="nbf" title="Insert Not Before">+nbf</button>
+                <button type="button" class="claim-btn" data-claim="aud" title="Insert Audience">+aud</button>
+                <button type="button" class="claim-btn" data-claim="iss" title="Insert Issuer">+iss</button>
+                <button type="button" class="claim-btn" data-claim="sub" title="Insert Subject">+sub</button>
+              </div>
               
               <textarea id="jwt-payload" class="editor-area" spellcheck="false"></textarea>
             </div>
 
-            <!-- HMAC Secret Key (shown for HS* algorithms) -->
+            <!-- HMAC Secret Key -->
             <div class="editor-group" id="hmac-key-group">
               <div class="group-header">
                 <label for="jwt-key" class="group-label">Secret Key</label>
@@ -136,7 +183,7 @@
               </div>
             </div>
 
-            <!-- RSA PEM Keys (shown for RS256 algorithm) -->
+            <!-- RSA PEM Keys -->
             <div class="editor-group rsa-key-group hidden" id="rsa-key-group">
               <div class="group-header">
                 <label class="group-label">RSA Private Key (PEM)</label>
@@ -171,6 +218,25 @@
               </div>
             </div>
 
+            <!-- Token Meta Row -->
+            <div class="token-meta-row">
+              <span class="token-size-badge" id="token-size-badge">0 bytes</span>
+              <button type="button" class="action-btn" id="btn-generate-qr" title="Generate QR Code">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="3" height="3"/><line x1="21" y1="14" x2="21" y2="21"/><line x1="14" y1="21" x2="21" y2="21"/>
+                </svg>
+                QR Code
+              </button>
+            </div>
+
+            <!-- QR Code Section (hidden by default) -->
+            <div class="qr-section hidden" id="qr-section">
+              <div class="qr-canvas-wrap">
+                <canvas id="qr-canvas" width="200" height="200"></canvas>
+              </div>
+              <span class="qr-label">Scan with any QR reader to import this token</span>
+            </div>
+
             <!-- TTL Countdown Badge -->
             <div id="ttl-status-bar" class="ttl-bar hidden">
               <span class="ttl-icon">⏳</span>
@@ -189,10 +255,10 @@
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                Tamper Signature
+                Tamper
               </button>
               <button type="button" class="action-btn accent-action" id="btn-send-to-encryptor">
-                Encrypt Token
+                Encrypt
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="9 18 15 12 9 6"/>
                 </svg>
@@ -210,7 +276,7 @@
               </div>
             </div>
 
-            <!-- Simplified Decoded Preview -->
+            <!-- Decoded Preview -->
             <div class="decoded-inspector">
               <div class="inspector-section">
                 <div class="section-banner header-banner">Header</div>
@@ -268,7 +334,7 @@
               </div>
             </div>
 
-            <!-- Custom IV Advanced Options -->
+            <!-- Custom IV -->
             <div class="editor-group advanced-group">
               <div class="group-header">
                 <label for="enc-custom-iv" class="group-label">Custom IV <span class="muted">(Optional, 12-byte Hex)</span></label>
@@ -357,7 +423,7 @@
                 </div>
               </div>
 
-              <!-- Structural Map Analysis -->
+              <!-- Structural Map -->
               <div class="structural-inspector">
                 <div class="inspector-heading font-medium">Segment Map Analysis</div>
                 <div class="inspect-item">
@@ -499,7 +565,7 @@
             <div class="card-header">
               <h2 class="card-title">Universal Encoding Converter</h2>
             </div>
-            <p class="card-desc">Convert data between Text (UTF-8), Hex, Base64, and Base64URL. Paste any format and auto-detect or manually select.</p>
+            <p class="card-desc">Convert data between Text (UTF-8), Hex, Base64, and Base64URL. Paste any format and convert.</p>
 
             <div class="editor-group">
               <div class="group-header">
@@ -556,11 +622,161 @@
         </div>
       </section>
 
+      <!-- ================= PANEL: HASH GENERATOR ================= -->
+      <section class="workspace-panel" id="panel-hash" role="tabpanel" aria-labelledby="tab-btn-hash" style="display: none;">
+        <div class="workspace-grid single-column">
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Cryptographic Hash Generator</h2>
+            </div>
+            <p class="card-desc">Compute SHA-256, SHA-384, SHA-512 hashes. Supports text input, HMAC keyed hashing, and file hashing.</p>
+
+            <!-- Mode Toggle -->
+            <div class="hash-mode-toggle">
+              <button type="button" class="hash-mode-btn active" id="hash-mode-text" data-mode="text">Text Input</button>
+              <button type="button" class="hash-mode-btn" id="hash-mode-hmac" data-mode="hmac">HMAC</button>
+              <button type="button" class="hash-mode-btn" id="hash-mode-file" data-mode="file">File Hash</button>
+            </div>
+
+            <!-- Text Input -->
+            <div class="editor-group" id="hash-text-group">
+              <label for="hash-input" class="group-label">Input Text</label>
+              <textarea id="hash-input" class="editor-area" placeholder="Enter text to hash..." spellcheck="false"></textarea>
+            </div>
+
+            <!-- HMAC Key (shown in HMAC mode) -->
+            <div class="editor-group hidden" id="hash-hmac-group">
+              <label for="hash-hmac-key" class="group-label">HMAC Secret Key</label>
+              <input type="text" id="hash-hmac-key" class="input-field" placeholder="Enter HMAC key..." />
+            </div>
+
+            <!-- File Drop (shown in File mode) -->
+            <div class="hidden" id="hash-file-group">
+              <div class="file-drop-zone" id="hash-file-drop">
+                <span class="drop-icon">📁</span>
+                <div>Drop a file here or <strong>click to browse</strong></div>
+                <input type="file" id="hash-file-input" />
+              </div>
+              <div class="file-info" id="hash-file-info"></div>
+            </div>
+
+            <button type="button" class="submit-btn" id="btn-hash-compute">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>
+              </svg>
+              Compute Hash
+            </button>
+
+            <!-- Hash Results -->
+            <div class="hash-output-group" id="hash-results">
+              <div class="hash-result-item">
+                <div class="group-header">
+                  <span class="hash-result-label">SHA-256</span>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-sha256">Copy</button>
+                </div>
+                <div class="hash-result-value" id="hash-sha256">—</div>
+              </div>
+              <div class="hash-result-item">
+                <div class="group-header">
+                  <span class="hash-result-label">SHA-384</span>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-sha384">Copy</button>
+                </div>
+                <div class="hash-result-value" id="hash-sha384">—</div>
+              </div>
+              <div class="hash-result-item">
+                <div class="group-header">
+                  <span class="hash-result-label">SHA-512</span>
+                  <button type="button" class="inline-copy-btn small-copy" id="btn-copy-sha512">Copy</button>
+                </div>
+                <div class="hash-result-value" id="hash-sha512">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= PANEL: PASSWORD GENERATOR ================= -->
+      <section class="workspace-panel" id="panel-password" role="tabpanel" aria-labelledby="tab-btn-password" style="display: none;">
+        <div class="workspace-grid single-column">
+          
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">Secure Password Generator</h2>
+            </div>
+            <p class="card-desc">Generate cryptographically secure passwords with configurable character sets, length, and batch count.</p>
+
+            <div class="password-config">
+              <!-- Length Slider -->
+              <div class="slider-group">
+                <div class="slider-header">
+                  <label for="pw-length" class="group-label">Password Length</label>
+                  <span class="slider-value" id="pw-length-value">24</span>
+                </div>
+                <input type="range" id="pw-length" class="password-slider" min="8" max="128" value="24" />
+              </div>
+
+              <!-- Character Set -->
+              <div class="editor-group">
+                <label class="group-label">Character Set</label>
+                <div class="charset-options">
+                  <label class="charset-option">
+                    <input type="checkbox" id="pw-upper" checked> Uppercase
+                    <span class="charset-preview">A-Z</span>
+                  </label>
+                  <label class="charset-option">
+                    <input type="checkbox" id="pw-lower" checked> Lowercase
+                    <span class="charset-preview">a-z</span>
+                  </label>
+                  <label class="charset-option">
+                    <input type="checkbox" id="pw-digits" checked> Digits
+                    <span class="charset-preview">0-9</span>
+                  </label>
+                  <label class="charset-option">
+                    <input type="checkbox" id="pw-symbols" checked> Symbols
+                    <span class="charset-preview">!@#$…</span>
+                  </label>
+                </div>
+              </div>
+
+              <!-- Batch Count -->
+              <div class="batch-control">
+                <label for="pw-batch-count">Generate count:</label>
+                <input type="number" id="pw-batch-count" class="batch-input" min="1" max="20" value="5" />
+              </div>
+            </div>
+
+            <button type="button" class="submit-btn" id="btn-generate-passwords">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/>
+              </svg>
+              Generate Passwords
+            </button>
+
+            <!-- Entropy Meter -->
+            <div class="entropy-meter" id="entropy-meter">
+              <div class="entropy-header">
+                <span class="entropy-label">Entropy</span>
+                <span class="entropy-bits" id="entropy-bits">—</span>
+              </div>
+              <div class="entropy-bar">
+                <div class="entropy-fill" id="entropy-fill"></div>
+              </div>
+            </div>
+
+            <!-- Password Output List -->
+            <div class="password-output-list" id="pw-output-list">
+              <!-- JS fills this -->
+            </div>
+          </div>
+        </div>
+      </section>
+
     </main>
 
     <!-- Footer -->
     <footer class="app-footer">
-      <p>🔒 Cryptography runs entirely in browser. Local secure sandbox. Version 3.0</p>
+      <p>🔒 All cryptography runs entirely in your browser. No data leaves your machine. Version 4.0</p>
     </footer>
   </div>
 
